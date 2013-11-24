@@ -9,7 +9,7 @@ Note that the reader class requires [bcmath](http://www.php.net/manual/en/intro.
 
 The database itself can be found at http://dev.maxmind.com/geoip/geoip2/geolite2/
 
-### Online API
+## Online API
 
 Online API access can be found at 
 
@@ -27,3 +27,9 @@ Example
 	http://api.kacper.se/geoip/2001:4860:4860::8888
 	
 At this time there is no request limit in place, please don't abuse this service.
+
+## Requirements
+This code requires PHP 5.3 or greater. Older versions of PHP are not supported.
+
+## Dependencies
+[MaxMind DB Reader PHP API](https://github.com/maxmind/MaxMind-DB-Reader-php)
