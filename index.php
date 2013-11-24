@@ -8,7 +8,6 @@ header("Content-Type: application/json; charset=utf-8");
 
 /**
  * Load the MaxMind reader class for their proprietary database format
- *
  */
 const MAX_DB_FILENAME = 'GeoLite2-City.mmdb';
 
