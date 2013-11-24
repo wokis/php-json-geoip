@@ -26,7 +26,7 @@ Example
 	or
 	http://api.kacper.se/geoip/2001:4860:4860::8888
 	
-At this time there is no request limit in place, please don't abuse this service.
+At this time there is no request limit in place, please don't abuse the service.
 
 ## Requirements
 This code requires PHP 5.3 or greater. Older versions of PHP are not supported.
