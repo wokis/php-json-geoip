@@ -7,6 +7,14 @@
 header("Content-Type: application/json; charset=utf-8");
 
 /**
+ * Options for json_encode
+ *
+ * JSON_UNESCAPED_UNICODE and JSON_PRETTY_PRINT 
+ *  are not available in PHP < 5.4
+ */
+define("JSON_OPTIONS", JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+/**
  * Load the MaxMind reader class for their proprietary database format
  */
 const MAX_DB_FILENAME = 'GeoLite2-City.mmdb';
@@ -18,91 +26,6 @@ require_once 'MaxMind/Db/Reader/Metadata.php';
 use MaxMind\Db\Reader;
 
 /**
- * Indents a flat JSON string to make it more human-readable.
- *
- * @param string $json The original JSON string to process.
- * @return string Indented version of the original JSON string.
- */
-function indentJson($json) {
-
-    $result      = '';
-    $pos         = 0;
-    $strLen      = strlen($json);
-    $indentStr   = '  ';
-    $newLine     = "\n";
-    $prevChar    = '';
-    $outOfQuotes = true;
-
-    for ($i=0; $i<=$strLen; $i++) {
-
-        // Grab the next character in the string.
-        $char = substr($json, $i, 1);
-
-        // Are we inside a quoted string?
-        if ($char == '"' && $prevChar != '\\') {
-            $outOfQuotes = !$outOfQuotes;
-
-        // If this character is the end of an element,
-        // output a new line and indent the next line.
-        } else if(($char == '}' || $char == ']') && $outOfQuotes) {
-            $result .= $newLine;
-            $pos --;
-            for ($j=0; $j<$pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-
-        // Add the character to the result string.
-        $result .= $char;
-
-        // If the last character was the beginning of an element,
-        // output a new line and indent the next line.
-        if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
-            $result .= $newLine;
-            if ($char == '{' || $char == '[') {
-                $pos ++;
-            }
-
-            for ($j = 0; $j < $pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-
-        $prevChar = $char;
-    }
-
-    return $result;
-}
-
-/**
- * Helper for replacing unicode sequences
- *
- * \u00e1 will become á and so on
- *
- * @param string $json Raw JSON encoded string
- * @return string JSON with removed unicode sequences
- */
-function jsonRemoveUnicodeSequences($json) {
-   return preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", $json);
-}
-
-
-/**
- * Helper for backporting some JSON functions to PHP < 5.4
- *
- * @param array $json Array to encode into JSON
- * @return string JSON formated string
- */
-function jsonBackportEncode($json) {
-    if (version_compare(phpversion(), '5.4', '>=')) {
-        return json_encode($json, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    }
-    else {
-        return indentJson(jsonRemoveUnicodeSequences(json_encode($json, JSON_NUMERIC_CHECK)));
-    }
-}
-
-/**
  * Helper for formating error messages and http codes
  *
  * @param int $httpCode Http status code
@@ -111,10 +34,10 @@ function jsonBackportEncode($json) {
  */
 function jsonError($httpCode, $msg) {
     // http_response_code is not available in PHP < 5.4
-    header(' ', true, $httpCode);
+    http_response_code($httpCode);
     
     $error = array('success' => false, 'message' => $msg);
-    echo jsonBackportEncode($error);
+    echo json_encode($error, JSON_OPTIONS);
     return;
 }
 
@@ -140,7 +63,7 @@ try {
         die();
     }
     
-    echo jsonBackportEncode($results);
+    echo json_encode($results, JSON_OPTIONS);
     
 } catch(Exception $e) {
     jsonError(500, $e->getMessage());
