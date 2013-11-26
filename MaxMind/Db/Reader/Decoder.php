@@ -249,7 +249,7 @@ class Decoder
         $unpacked = array_merge(unpack("N$numberOfLongs", $bytes));
         foreach ($unpacked as $part) {
             // No bitwise operators with bcmath :'-(
-            //$integer = bcadd(bcmul($integer, bcpow(2, 32)), $part);
+            $integer = bcadd(bcmul($integer, bcpow(2, 32)), $part);
         }
         return $integer;
     }
