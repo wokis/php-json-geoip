@@ -5,8 +5,6 @@ REST API for MaxMind GeoLite2 using PHP and JSON.
 
 The MaxMind PHP reader class can be found at https://github.com/maxmind/MaxMind-DB-Reader-php
 
-Note that the reader class requires [bcmath](http://www.php.net/manual/en/intro.bc.php), something I have commented out in my pull due to lack of bcmath support on my server. There are also some functions, related to JSON encoding, one could do without if the PHP version is 5.4 or greater.
-
 The database itself can be found at http://dev.maxmind.com/geoip/geoip2/geolite2/
 
 ## Online API
@@ -29,7 +27,9 @@ Example
 At this time there is no request limit in place, please don't abuse the service.
 
 ## Requirements
-This code requires PHP 5.3 or greater. Older versions of PHP are not supported.
+This code requires PHP 5.4 or greater. Older versions of PHP are not supported.
+
+[bcmath](http://www.php.net/manual/en/intro.bc.php) is required for the MaxMind reader class.
 
 ## Dependencies
 [MaxMind DB Reader PHP API](https://github.com/maxmind/MaxMind-DB-Reader-php)
