@@ -54,7 +54,7 @@ try {
     $results = $reader->get($ip);
 
     if (empty($results)) {
-        jsonError(404, 'No match found for "' .$ip. '". The server has not found anything matching the Request-URI.');
+        jsonError(404, "No match found for \"$ip\". The server has not found anything matching the Request-URI.");
         die();
     }
     
