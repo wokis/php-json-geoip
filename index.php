@@ -1,29 +1,25 @@
 <?php
+require 'vendor/autoload.php';
+
 /**
  * This product uses GeoLite2 data created by MaxMind, available from
  * http://www.maxmind.com
  */
 
+use MaxMind\Db\Reader;
+const MAX_DB_FILENAME = 'GeoLite2-City.mmdb';
+
 header("Content-Type: application/json; charset=utf-8");
+header("Access-Control-Allow-Origin: *");
 
 /**
  * Options for json_encode
  *
- * JSON_UNESCAPED_UNICODE and JSON_PRETTY_PRINT 
- *  are not available in PHP < 5.4
+ * JSON_UNESCAPED_UNICODE, JSON_PRETTY_PRINT 
+ *  and JSON_UNESCAPED_SLASHES are not available 
+ *  in PHP < 5.4
  */
-define("JSON_OPTIONS", JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-/**
- * Load the MaxMind reader class for their proprietary database format
- */
-const MAX_DB_FILENAME = 'GeoLite2-City.mmdb';
-
-require_once 'MaxMind/Db/Reader.php';
-require_once 'MaxMind/Db/Reader/Decoder.php';
-require_once 'MaxMind/Db/Reader/InvalidDatabaseException.php';
-require_once 'MaxMind/Db/Reader/Metadata.php';
-use MaxMind\Db\Reader;
+define("JSON_OPTIONS", JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
 /**
  * Helper for formating error messages and http codes
@@ -46,8 +42,7 @@ function jsonError($httpCode, $msg) {
  *
  * Get IP, validate, open the GeoLite database and return the results as JSON
  */
-if (isset($_GET['ip'])) $ip = $_GET['ip'];
-else $ip = $_SERVER['REMOTE_ADDR'];
+$ip = (isset($_GET['ip'])) ? $_GET['ip'] : $_SERVER['REMOTE_ADDR'];
 
 if(!filter_var($ip, FILTER_VALIDATE_IP)) {
     jsonError(400, 'Invalid IP address. The request could not be understood by the server due to malformed syntax.');

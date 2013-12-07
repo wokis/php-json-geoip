@@ -27,10 +27,15 @@ Example
 	
 At this time there is no request limit in place, please don't abuse the service.
 
+## Cross Origin Resource Sharing
+The API supports Cross Origin Resource Sharing (CORS) for AJAX requests. You can read the [CORS W3C working draft](http://www.w3.org/TR/cors/), or the [enable cross-origin resource sharing](http://enable-cors.org/) website.
+
 ## Requirements
 This code requires PHP 5.4 or greater. Older versions of PHP are not supported.
 
 [bcmath](http://www.php.net/manual/en/intro.bc.php) is required for the MaxMind reader class.
 
 ## Dependencies
+It's recommended to use [Composer](http://getcomposer.org) to install the required dependencies.
+
 [MaxMind DB Reader PHP API](https://github.com/maxmind/MaxMind-DB-Reader-php)
