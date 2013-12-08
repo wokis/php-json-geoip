@@ -1,16 +1,17 @@
 <?php
 require 'vendor/autoload.php';
 
+use MaxMind\Db\Reader;
+
 /**
  * This product uses GeoLite2 data created by MaxMind, available from
  * http://www.maxmind.com
  */
 
-use MaxMind\Db\Reader;
 const MAX_DB_FILENAME = 'GeoLite2-City.mmdb';
 
-header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: *");
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
 
 /**
  * Options for json_encode
@@ -19,7 +20,7 @@ header("Access-Control-Allow-Origin: *");
  *  and JSON_UNESCAPED_SLASHES are not available 
  *  in PHP < 5.4
  */
-define("JSON_OPTIONS", JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+define('JSON_OPTIONS', JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
 /**
  * Helper for formating error messages and http codes
@@ -28,7 +29,8 @@ define("JSON_OPTIONS", JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY
  * @param string $msg Error message to return
  * @return string JSON formated error message
  */
-function jsonError($httpCode, $msg) {
+function jsonError($httpCode, $msg)
+{
     // http_response_code is not available in PHP < 5.4
     http_response_code($httpCode);
     
@@ -44,7 +46,7 @@ function jsonError($httpCode, $msg) {
  */
 $ip = (isset($_GET['ip'])) ? $_GET['ip'] : $_SERVER['REMOTE_ADDR'];
 
-if(!filter_var($ip, FILTER_VALIDATE_IP)) {
+if (!filter_var($ip, FILTER_VALIDATE_IP)) {
     jsonError(400, 'Invalid IP address. The request could not be understood by the server due to malformed syntax.');
     die();
 }
@@ -60,6 +62,6 @@ try {
     
     echo json_encode($results, JSON_OPTIONS);
     
-} catch(Exception $e) {
+} catch (Exception $e) {
     jsonError(500, $e->getMessage());
 }
